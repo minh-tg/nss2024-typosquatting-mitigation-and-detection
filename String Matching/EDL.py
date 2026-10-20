@@ -1,43 +1,43 @@
-en_layout = {
-    "1": ["1", "Q", "2"],
-    "2": ["2", "1", "3", "Q", "W"],
-    "3": ["3", "2", "4", "W", "E"],
-    "4": ["4", "3", "5", "E", "R"],
-    "5": ["5", "4", "6", "R", "T"],
-    "6": ["6", "5", "7", "T", "Y"],
-    "7": ["7","6", "8", "Y", "U"],
-    "8": ["8","7", "9", "U", "I"],
-    "9": ["9","8", "0", "I", "O"],
-    "0": ["0","9", "-", "O", "P"],
+KEYBOARD = {
+    "1": ["Q", "2"],
+    "2": ["1", "3", "Q", "W"],
+    "3": ["2", "4", "W", "E"],
+    "4": ["3", "5", "E", "R"],
+    "5": ["4", "6", "R", "T"],
+    "6": ["5", "7", "T", "Y"],
+    "7": ["6", "8", "Y", "U"],
+    "8": ["7", "9", "U", "I"],
+    "9": ["8", "0", "I", "O"],
+    "0": ["9", "-", "O", "P"],
 
-    "Q": ["Q", "1", "2", "A", "W"],
-    "W": ["W", "2", "3", "Q", "E", "A", "S"],
-    "E": ["E", "3", "4", "W", "R", "S", "D"],
-    "R": ["R", "4", "5", "E", "T", "D", "F"],
-    "T": ["T", "5", "6", "R", "Y", "F", "G"],
-    "Y": ["Y", "6", "7", "T", "U", "G", "H"],
-    "U": ["U", "7", "8", "Y", "I", "H", "J"],
-    "I": ["I", "8", "9", "U", "O", "J", "K"],
-    "O": ["O", "9", "0", "I", "P", "K", "L"],
-    "P": ["P", "0", "-", "O", "L"],
+    "Q": ["1", "2", "A", "W"],
+    "W": ["2", "3", "Q", "E", "A", "S"],
+    "E": ["3", "4", "W", "R", "S", "D"],
+    "R": ["4", "5", "E", "T", "D", "F"],
+    "T": ["5", "6", "R", "Y", "F", "G"],
+    "Y": ["6", "7", "T", "U", "G", "H"],
+    "U": ["7", "8", "Y", "I", "H", "J"],
+    "I": ["8", "9", "U", "O", "J", "K"],
+    "O": ["9", "0", "I", "P", "K", "L"],
+    "P": ["0", "-", "O", "L"],
 
-    "A": ["A", "Q", "W", "S", "Z"],
-    "S": ["S", "W", "E", "A", "D", "Z", "X"],
-    "D": ["D", "E", "R", "S", "F", "X", "C"],
-    "F": ["F", "R", "T", "D", "G", "C", "V"],
-    "G": ["G", "T", "Y", "F", "H", "V", "B"],
-    "H": ["H", "Y", "U", "G", "J", "B", "N"],
-    "J": ["J", "U", "I", "H", "K", "N", "M"],
-    "K": ["K", "I", "O", "J", "L", "M"],
-    "L": ["L", "O", "P", "K", "."],
+    "A": ["Q", "W", "S", "Z"],
+    "S": ["W", "E", "A", "D", "Z", "X"],
+    "D": ["E", "R", "S", "F", "X", "C"],
+    "F": ["R", "T", "D", "G", "C", "V"],
+    "G": ["T", "Y", "F", "H", "V", "B"],
+    "H": ["Y", "U", "G", "J", "B", "N"],
+    "J": ["U", "I", "H", "K", "N", "M"],
+    "K": ["I", "O", "J", "L", "M"],
+    "L": ["O", "P", "K", "."],
 
-    "Z": ["Z", "A", "S", "X"],
-    "X": ["X", "Z", "S", "D", "C"],
-    "C": ["C", "X", "D", "F", "V"],
-    "V": ["V", "C", "F", "G", "B"],
-    "B": ["B", "V", "G", "H", "N"],
-    "N": ["N", "B", "H", "J", "M"],
-    "M": ["M", "N", "J", "K"],
+    "Z": ["A", "S", "X"],
+    "X": ["Z", "S", "D", "C"],
+    "C": ["X", "D", "F", "V"],
+    "V": ["C", "F", "G", "B"],
+    "B": ["V", "G", "H", "N"],
+    "N": ["B", "H", "J", "M"],
+    "M": ["N", "J", "K"],
     "-": ["0", "P", "_"],
     "_": ["-"],
     ".": ["L"],
@@ -51,46 +51,44 @@ en_layout = {
     "*": []
 }
 
-def extended_damerau_levenshtein(s1, s2, key_map):
-    replace_cost = 0
-    length_penalty = 0
 
-    # Remove special characters from s1 and s2, and apply a replacement cost if equal afterward
-    for char in [".", "-", "_", ".js"]:
-        if (char in s1 or char in s2) and (s1 != s2):
-            s1 = s1.replace(char, "")
-            s2 = s2.replace(char, "")
-            if s1 == s2:
-                replace_cost = 0.5
+def near(source, destination):
+    """Are two keys neighbors? A key counts as its own neighbor."""
+    if source == destination:
+        return True
+    if not (source.isascii() and destination.isascii()):
+        return False
+    x, y = source.upper(), destination.upper()
+    return x in KEYBOARD and y in KEYBOARD and (x == y or x in KEYBOARD[y])
 
-    rows = len(s1) + 1
-    cols = len(s2) + 1
-    dist = [[0 for x in range(cols)] for y in range(rows)]
 
-    # Initialize distance matrix
-    for i in range(1, rows):
-        dist[i][0] = i
-    for i in range(1, cols):
-        dist[0][i] = i
+def distance(target, candidate):
+    """EDL distance from the legitimate name (target) to the candidate."""
+    h, w = len(target), len(candidate)
+    d = [[0] * (w + 1) for _ in range(h + 1)]
 
-    
-    for col in range(1, cols):
-        for row in range(1, rows):
-            if s1[row - 1] == s2[col - 1]:
-                cost = 0  # No cost if characters match
-            else:
-                
-                cost = 0.5 if s1[row - 1].upper() in key_map.get(s2[col - 1].upper(), []) else 2
+    def insert(i, y):
+        # Insertion: 0.5 next to the previous target key, 2 otherwise.
+        if not target:
+            return 4
+        return 1 if near(target[i - 1] if i else target[0], y) else 4
 
-            dist[row][col] = min(dist[row - 1][col] + 0.5,       
-                                 dist[row][col - 1] + 0.5,      
-                                 dist[row - 1][col - 1] + cost)   
+    for i in range(h + 1):
+        d[i][0] = i                                     # deletion 0.5, also at the start
+    for j, y in enumerate(candidate, 1):
+        d[0][j] = d[0][j - 1] + insert(0, y)            # insertion before the first letter
+    for i, x in enumerate(target, 1):
+        for j, y in enumerate(candidate, 1):
+            substitute = 0 if x == y else (1 if near(x, y) else 4)
+            d[i][j] = min(d[i - 1][j] + 1,              # deletion 0.5
+                          d[i][j - 1] + insert(i, y),   # insertion 0.5 / 2
+                          d[i - 1][j - 1] + substitute) # match 0, substitution 0.5 / 2
+            if i > 1 and j > 1 and target[i - 2] == y and candidate[j - 2] == x:
+                d[i][j] = min(d[i][j], d[i - 2][j - 2] + 1)  # adjacent transposition 0.5
+    return d[h][w] / 2
 
-            if row > 1 and col > 1 and s1[row - 1] == s2[col - 2] and s1[row - 2] == s2[col - 1]:
-                dist[row][col] = min(dist[row][col], dist[row - 2][col - 2] + 0.5)
 
-    length_penalty = (abs(len(s1) - len(s2))) * 0.5 if abs(len(s1) - len(s2)) > 1 else 0
-    
-    distance = dist[rows - 1][cols - 1] + replace_cost
-
-    return distance + length_penalty
+if __name__ == "__main__":
+    for a, b, want in [("react", "reactr", 0.5), ("react", "reacto", 2), ("react", "reqct", 0.5),
+                       ("react", "regct", 2), ("react", "rect", 0.5), ("react", "raect", 0.5)]:
+        print(f"{a} -> {b}: {distance(a, b)} (paper: {want})")

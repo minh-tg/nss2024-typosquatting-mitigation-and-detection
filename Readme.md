@@ -1,63 +1,60 @@
 # Typosquatting Detection in Software-Supply-Chains
 
-![GitHub License](https://img.shields.io/github/license/xMinhx/nss2024-typosquatting-mitigation-and-detection)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14907786.svg)](https://doi.org/10.5281/zenodo.14907786)
+![GitHub License](https://img.shields.io/github/license/minh-tg/nss2024-typosquatting-mitigation-and-detection)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14907785.svg)](https://doi.org/10.5281/zenodo.14907785)
 
 This repository contains the dataset and supplementary materials used in the paper:
 
 **You Can’t Touch This: Detecting Typosquatting Packages for Enhanced Malware Prevention in Software Supply Chains**  
-Minh Tien Truong, Luigi Lo Iacono, Nils Gruschka <br>
-Published in *NSS 2024: 18th International Conference on Network and System Security*, 20th November 2024 <br> 
-DOI: [[DOI link](https://link.springer.com/chapter/10.1007/978-981-96-3531-3_8)]
+Minh Tien Truong, Nils Gruschka, Luigi Lo Iacono
+
+Published in *NSS 2024: 18th International Conference on Network and System Security*, 20th November 2024
+
+DOI: [10.1007/978-981-96-3531-3_8](https://doi.org/10.1007/978-981-96-3531-3_8)
 
 ## Abstract
 
-In recent years, typosquatting has become a significant threat
-to software supply chain systems, where malicious packages deceptively
-mimic legitimate ones. Attackers register these fraudulent packages with
-names strikingly similar to those of legitimate packages. As a result, de-
-velopers can mistakenly download these malicious packages by mistyping
-the intended package name or selecting a package based on its convincing
-yet deceptive name.
-In this paper, we assess the effectiveness of string-matching algorithms
-in identifying potential typosquatting candidates. We construct an open
-dataset comprising 394 typosquatting packages and evaluate the perfor-
-mance of these algorithms based on their ability to detect typosquatting
-packages. In addition, we introduce a novel string-matching algorithm,
-an extension of the Damerau-Levenshtein distance, demonstrating a no-
-tably higher true-positive rate than existing methods. Since our dataset
-contains features not previously considered, we also investigate how these
-new features affect the assignment accuracy of ML-based classifiers. Our
-results show an overall accuracy rate of 98.4% on our datasets and 96.0%
-and 93.5% accuracy on evaluating two other open datasets. These results
-provide valuable insights for researchers, package manager vendors, and
-developers to improve their understanding of malicious typosquatting
-packages and improve mediation strategies and technologies.
+In recent years, typosquatting has become a significant threat to software supply chain systems, where malicious packages deceptively mimic legitimate ones. 
+Attackers register these fraudulent packages with names strikingly similar to those of legitimate packages. 
+As a result, developers can mistakenly download these malicious packages by mistyping
+the intended package name or selecting a package based on its convincing yet deceptive name.
+In this paper, we assess the effectiveness of string-matching algorithms in identifying potential typosquatting candidates. 
+We construct an open dataset comprising 394 typosquatting packages and evaluate the performance of these algorithms based on their ability to detect typosquatting packages. 
+In addition, we introduce a novel string-matching algorithm, an extension of the Damerau-Levenshtein distance, demonstrating a notably higher true-positive rate than existing methods. 
+Since our dataset contains features not previously considered, we also investigate how these new features affect the assignment accuracy of ML-based classifiers. 
+Our results show an overall accuracy rate of 98.4% on our datasets and 96.0% and 93.5% accuracy on evaluating two other open datasets. 
+These results provide valuable insights for researchers, package manager vendors, and developers to improve their understanding of malicious typosquatting packages and improve mediation strategies and technologies.
 
 ---
 
 ## Dataset Overview
 
+`Packages/` contains real malicious npm packages. Do not install or execute them; handle them only in an isolated environment.
+
 This repository includes the following datasets:
 
-- **Own Dataset**: A collection of 407 (394 with source code) typosquatting packages we have collected based on SonaType, Phylum.io and Snyk listings. 
+- **Own Dataset**: A collection of 406 (397 with source code, 394 after removing 3 obfuscated packages) typosquatting packages we have collected based on Sonatype, Phylum.io and Snyk listings. 
 - **Backstabbers Knife Collection**: A snapshot of Backstabbers Knife Collection during our analysis for reproduction purposes
 - **MalOSS**: A snapshot of the MalOSS dataset during our analysis for reproduction purposes. 
 
-The programs and our own dataset is licensed under the MIT License. For the Backstabber and MalOSS datasets please look up their corresponding licensing. 
+The programs and our own dataset are licensed under the MIT License. For the Backstabber and MalOSS datasets please look up their corresponding licensing. 
 Please make sure to reference us, if you find this dataset helpful:
 
 ```
-@inproceedings{truong-gruschka-loiacono2024,
-  title={You Can’t Touch This: Detecting Typosquatting Packages for Enhanced Malware Prevention in Software Supply Chains},
-  author={Minh Tien Truong, Nils Gruschka, Luigi Lo Iacono},
-  booktitle = {NSS 2024: 18th International Conference on Network and System Security, {NSS}},
-  month     = November,
-  year      = {2024},
-  url       = {TBA}
+@InProceedings{truong2025typosquatting,
+  author    = {Truong, Minh Tien and Gruschka, Nils and Lo Iacono, Luigi},
+  editor    = {Song, Houbing Herbert and Di Pietro, Roberto and Alrabaee, Saed and Tubishat, Mohammad and Al-kfairy, Mousa and Alfandi, Omar},
+  title     = {You Can't Touch This: Detecting Typosquatting Packages for Enhanced Malware Prevention in Software Supply Chains},
+  booktitle = {Network and System Security},
+  series    = {Lecture Notes in Computer Science},
+  year      = {2025},
+  publisher = {Springer Nature Singapore},
+  address   = {Singapore},
+  pages     = {147--166},
+  doi       = {10.1007/978-981-96-3531-3_8}
 }
 ```
-
+To cite the dataset and code, use the Zenodo DOI [10.5281/zenodo.14907785](https://doi.org/10.5281/zenodo.14907785).
 
 If you choose to use the Backstabbers Knife Collection or the MalOSS dataset, please make sure to cite the original authors in your research.
 Access to their package collection can be requested by the provided link.
@@ -77,6 +74,7 @@ Access to their package collection can be requested by the provided link.
 | `Feature Extraction.ipynb` | Jupyter-File | A series of code cells to extract features from packages explained in the paper.                                                                                              |
 | `Machine Learning.ipynb`   | Jupyter-File | The model trained on our dataset and tested on various different datasets                                                                                                     |
 
+`String Matching/EDL.py` was replaced in v1.1.0. The version in v1.0.0 did not follow the rules in Sec. 5.2 of the paper (two of its examples gave different values). The updated version implements those rules; call it as `distance(target, candidate)` with the legitimate package name first.
 
 ---
 
@@ -86,7 +84,7 @@ Access to their package collection can be requested by the provided link.
 
    To clone the repository, use the following command:
    ```bash
-   git clone https://github.com/yourusername/reponame.git
+   git clone https://github.com/minh-tg/nss2024-typosquatting-mitigation-and-detection.git
    ```
 2. Use the `File Extraction.ipynb` Notebook to extract all packages   
 3. Get access to MalOSS and Backstabber Knife-Collection datasets
